@@ -187,14 +187,15 @@ extern void __refill_cfs_bandwidth_runtime(struct cfs_bandwidth *cfs_b);
 extern void __start_cfs_bandwidth(struct cfs_bandwidth *cfs_b);
 extern void unthrottle_cfs_rq(struct cfs_rq *cfs_rq);
 
+extern void free_wrr_sched_group(struct task_group *tg);
+extern int alloc_wrr_sched_group(struct task_group *tg, struct task_group *parent);
 extern void free_rt_sched_group(struct task_group *tg);
 extern int alloc_rt_sched_group(struct task_group *tg, struct task_group *parent);
 extern void init_tg_rt_entry(struct task_group *tg, struct rt_rq *rt_rq,
 		struct sched_rt_entity *rt_se, int cpu,
 		struct sched_rt_entity *parent);
 
-extern void free_wrr_sched_group(struct task_group *tg);
-extern int alloc_wrr_sched_group(struct task_group *tg, struct task_group *parent);
+
 extern void init_tg_wrr_entry(struct task_group *tg, struct wrr_rq *wrr_rq,
 		struct sched_wrr_entity *wrr_se, int cpu,
 		struct sched_wrr_entity *parent);
@@ -285,6 +286,7 @@ static inline int rt_bandwidth_enabled(void)
 
 /* Real-Time classes' related field in a runqueue: */
 struct rt_rq {
+
 	struct rt_prio_array active;
 	unsigned long rt_nr_running;
 #if defined CONFIG_SMP || defined CONFIG_RT_GROUP_SCHED
@@ -317,9 +319,10 @@ struct rt_rq {
 };
 
 struct wrr_rq {
-	struct wrr_prio_array active;
+	struct list_head list;/*list of processes*/
+
 	unsigned long wrr_nr_running;
-#if defined CONFIG_SMP || defined CONFIG_RT_GROUP_SCHED
+#if defined CONFIG_SMP || defined CONFIG_WRR_GROUP_SCHED
 	struct {
 		int curr; /* highest queued rt task prio */
 #ifdef CONFIG_SMP
@@ -333,13 +336,13 @@ struct wrr_rq {
 	int overloaded;
 	struct plist_head pushable_tasks;
 #endif
-	int wrr_throttled;
+	int wrr_throttled;/**TODO:delete**/
 	u64 wrr_time;
 	u64 wrr_runtime;
 	/* Nests inside the rq lock: */
 	raw_spinlock_t wrr_runtime_lock;
 
-#ifdef CONFIG_RT_GROUP_SCHED
+#ifdef CONFIG_WRR_GROUP_SCHED
 	unsigned long wrr_nr_boosted;
 
 	struct rq *rq;

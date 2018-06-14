@@ -4170,17 +4170,18 @@ static struct task_struct *find_process_by_pid(pid_t pid)
 static void
 __setscheduler(struct rq *rq, struct task_struct *p, int policy, int prio)
 {
+	printk("I am in __setscheduler which assign the sched class\n");
 	p->policy = policy;
 	p->rt_priority = prio;
-	p->wrr_priority = prio;
 	p->normal_prio = normal_prio(p);
 	/* we are holding p->pi_lock already */
 	p->prio = rt_mutex_getprio(p);
 	if (rt_prio(p->prio))
 		p->sched_class = &rt_sched_class;
-	else if(wrr_prio(p->prio))
+	else if(policy == SCHED_WRR){
 		p->sched_class = &wrr_sched_class;
-	else
+		printk("I am assigned wrr\n");
+	}else
 		p->sched_class = &fair_sched_class;
 	set_load_weight(p);
 }
@@ -4207,6 +4208,7 @@ static bool check_same_owner(struct task_struct *p)
 static int __sched_setscheduler(struct task_struct *p, int policy,
 				const struct sched_param *param, bool user)
 {
+	printk("I am in __sched_setscheduler");
 	int retval, oldprio, oldpolicy = -1, on_rq, running;
 	unsigned long flags;
 	const struct sched_class *prev_class;
@@ -4327,20 +4329,6 @@ recheck:
 	}
 #endif
 
-#ifdef CONFIG_WRR_GROUP_SCHED
-	if (user) {
-		/*
-		 * Do not allow realtime tasks into groups that have no runtime
-		 * assigned.
-		 */
-		if (wrr_bandwidth_enabled() && wrr_policy(policy) &&
-				task_group(p)->wrr_bandwidth.wrr_runtime == 0 &&
-				!task_group_is_autogroup(task_group(p))) {
-			task_rq_unlock(rq, p, &flags);
-			return -EPERM;
-		}
-	}
-#endif
 
 	/* recheck policy now with rq lock held */
 	if (unlikely(oldpolicy != -1 && oldpolicy != p->policy)) {
@@ -4359,6 +4347,7 @@ recheck:
 
 	oldprio = p->prio;
 	prev_class = p->sched_class;
+
 	__setscheduler(rq, p, policy, param->sched_priority);
 
 	if (running)
@@ -7432,8 +7421,8 @@ static DEFINE_SPINLOCK(task_group_lock);
 static void free_sched_group(struct task_group *tg)
 {
 	free_fair_sched_group(tg);
-	free_rt_sched_group(tg);
 	free_wrr_sched_group(tg);
+	free_rt_sched_group(tg);
 
 	autogroup_free(tg);
 	kfree(tg);
@@ -7451,12 +7440,12 @@ struct task_group *sched_create_group(struct task_group *parent)
 
 	if (!alloc_fair_sched_group(tg, parent))
 		goto err;
-
+	if (!alloc_wrr_sched_group(tg, parent))
+		goto err;
 	if (!alloc_rt_sched_group(tg, parent))
 		goto err;
 	
-	if (!alloc_wrr_sched_group(tg, parent))
-		goto err;
+
 
 
 	spin_lock_irqsave(&task_group_lock, flags);

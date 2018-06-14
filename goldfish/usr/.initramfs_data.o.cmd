@@ -1,10 +1,10 @@
-cmd_usr/initramfs_data.o := arm-linux-androideabi-gcc -Wp,-MD,usr/.initramfs_data.o.d  -nostdinc -isystem /home/wangbo/Kit/android-ndk-linux/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/../lib/gcc/arm-linux-androideabi/4.9/include -I/home/wangbo/kernel/goldfish/arch/arm/include -Iarch/arm/include/generated -Iinclude  -include /home/wangbo/kernel/goldfish/include/linux/kconfig.h -D__KERNEL__ -mlittle-endian -Iarch/arm/mach-goldfish/include -D__ASSEMBLY__ -mabi=aapcs-linux -mno-thumb-interwork -funwind-tables  -D__LINUX_ARM_ARCH__=7 -march=armv7-a  -include asm/unified.h -msoft-float     -DINITRAMFS_IMAGE="usr/initramfs_data.cpio"   -c -o usr/initramfs_data.o usr/initramfs_data.S
+cmd_usr/initramfs_data.o := arm-linux-androideabi-gcc -Wp,-MD,usr/.initramfs_data.o.d  -nostdinc -isystem /home/andylee/Downloads/android-ndk-r11-linux-x86_64.tar.bz2/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/../lib/gcc/arm-linux-androideabi/4.9/include -I/home/andylee/kernel/goldfish/arch/arm/include -Iarch/arm/include/generated -Iinclude  -include /home/andylee/kernel/goldfish/include/linux/kconfig.h -D__KERNEL__ -mlittle-endian -Iarch/arm/mach-goldfish/include -D__ASSEMBLY__ -mabi=aapcs-linux -mno-thumb-interwork -funwind-tables  -D__LINUX_ARM_ARCH__=7 -march=armv7-a  -include asm/unified.h -msoft-float -gdwarf-2     -DINITRAMFS_IMAGE="usr/initramfs_data.cpio"   -c -o usr/initramfs_data.o usr/initramfs_data.S
 
 source_usr/initramfs_data.o := usr/initramfs_data.S
 
 deps_usr/initramfs_data.o := \
     $(wildcard include/config/64bit.h) \
-  /home/wangbo/kernel/goldfish/arch/arm/include/asm/unified.h \
+  /home/andylee/kernel/goldfish/arch/arm/include/asm/unified.h \
     $(wildcard include/config/arm/asm/unified.h) \
     $(wildcard include/config/thumb2/kernel.h) \
   include/linux/stringify.h \

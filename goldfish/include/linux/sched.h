@@ -1259,17 +1259,17 @@ struct sched_rt_entity {
 struct sched_wrr_entity {
 	struct list_head run_list;
 	unsigned long timeout;
-	unsigned int time_slice;	/*TODO:only one time_slice here?*/
+	unsigned int time_slice;	
 	int nr_cpus_allowed;
 
 	struct sched_wrr_entity *back;
-#ifdef CONFIG_WRR_GROUP_SCHED
+
 	struct sched_wrr_entity	*parent;
 	/* rq on which this entity is (to be) queued: */
 	struct wrr_rq		*wrr_rq;
 	/* rq "owned" by this entity/group: */
 	struct wrr_rq		*wrr_q;
-#endif
+
 };
 
 #define WRR_FORE_TIMESLICE	(100 * HZ / 1000)

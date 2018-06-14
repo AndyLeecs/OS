@@ -1,9 +1,9 @@
-cmd_arch/arm/boot/compressed/piggy.gzip.o := arm-linux-androideabi-gcc -Wp,-MD,arch/arm/boot/compressed/.piggy.gzip.o.d  -nostdinc -isystem /home/wangbo/Kit/android-ndk-linux/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/../lib/gcc/arm-linux-androideabi/4.9/include -I/home/wangbo/kernel/goldfish/arch/arm/include -Iarch/arm/include/generated -Iinclude  -include /home/wangbo/kernel/goldfish/include/linux/kconfig.h -D__KERNEL__ -mlittle-endian -Iarch/arm/mach-goldfish/include -D__ASSEMBLY__ -mabi=aapcs-linux -mno-thumb-interwork -funwind-tables  -D__LINUX_ARM_ARCH__=7 -march=armv7-a  -include asm/unified.h -msoft-float         -c -o arch/arm/boot/compressed/piggy.gzip.o arch/arm/boot/compressed/piggy.gzip.S
+cmd_arch/arm/boot/compressed/piggy.gzip.o := arm-linux-androideabi-gcc -Wp,-MD,arch/arm/boot/compressed/.piggy.gzip.o.d  -nostdinc -isystem /home/andylee/Downloads/android-ndk-r11-linux-x86_64.tar.bz2/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/../lib/gcc/arm-linux-androideabi/4.9/include -I/home/andylee/kernel/goldfish/arch/arm/include -Iarch/arm/include/generated -Iinclude  -include /home/andylee/kernel/goldfish/include/linux/kconfig.h -D__KERNEL__ -mlittle-endian -Iarch/arm/mach-goldfish/include -D__ASSEMBLY__ -mabi=aapcs-linux -mno-thumb-interwork -funwind-tables  -D__LINUX_ARM_ARCH__=7 -march=armv7-a  -include asm/unified.h -msoft-float -gdwarf-2         -c -o arch/arm/boot/compressed/piggy.gzip.o arch/arm/boot/compressed/piggy.gzip.S
 
 source_arch/arm/boot/compressed/piggy.gzip.o := arch/arm/boot/compressed/piggy.gzip.S
 
 deps_arch/arm/boot/compressed/piggy.gzip.o := \
-  /home/wangbo/kernel/goldfish/arch/arm/include/asm/unified.h \
+  /home/andylee/kernel/goldfish/arch/arm/include/asm/unified.h \
     $(wildcard include/config/arm/asm/unified.h) \
     $(wildcard include/config/thumb2/kernel.h) \
 
